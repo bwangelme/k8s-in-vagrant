@@ -1,0 +1,9 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: ubuntu
+spec:
+  containers:
+    - name: ubuntu
+      image: osexp2000/ubuntu-with-utils
+      command: ["/bin/sleep", "3650d"]
