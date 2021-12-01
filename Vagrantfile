@@ -16,15 +16,14 @@ Vagrant.configure("2") do |config|
   config.disksize.size = "40GB"
 
   $num_instances = 3
-  $etcd_cluster = "node1=http://172.18.10.101:2380"
   (1..$num_instances).each do |i|
     config.vm.define "k8s-node#{i}" do |node|
       node.vm.box = "ubuntu/focal64"
       node.vm.hostname = "k8s-node#{i}"
-      netmask = "255.255.0.0"
-      ip1 = "172.16.10.#{i+100}"
-      ip2 = "172.16.20.#{i+100}"
-      ip3 = "172.16.30.#{i+100}"
+      netmask = "255.255.248.0"
+      ip1 = "192.168.56.#{i+100}"
+      ip2 = "192.168.57.#{i+100}"
+      ip3 = "192.168.58.#{i+100}"
       node.vm.network "private_network", ip: ip1, netmask: netmask
       node.vm.network "private_network", ip: ip2, netmask: netmask
       node.vm.network "private_network", ip: ip3, netmask: netmask
