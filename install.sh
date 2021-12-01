@@ -3,18 +3,25 @@
 # Author: bwangel<bwangel.me@gmail.com>
 # Date: 5,24,2020 16:38
 
-echo "设置 apt"
-sed -i 's/http:\/\/archive.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
-
-if [[ ! -f /etc/apt/apt.conf.d/proxy.conf ]];then
-    echo '设置 apt 安装的代理'
+function enable_apt_proxy()
+{
+    echo '打开 apt 代理'
     cat >> /etc/apt/apt.conf.d/proxy.conf <<EOF
 Acquire {
     HTTP::proxy "http://10.8.0.1:8118";
     HTTPS::proxy "http://10.8.0.1:8118";
 }
 EOF
-fi
+}
+
+function disable_apt_proxy()
+{
+    echo "关闭 apt 代理"
+    rm -v /etc/apt/apt.conf.d/proxy.conf
+}
+
+echo "设置 apt"
+sed -i 's/http:\/\/archive.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
 grep 'hostname config for k8s' /etc/hosts
 if [[ $? == 1 ]]; then
@@ -39,16 +46,19 @@ echo '  写入 aliyun 软件源信息'
 add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
 echo '  安装 Kubernetes'
 export HTTP_PROXY='10.8.0.1:8118' HTTPS_PROXY='10.8.0.1:8118'
-export NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.0.0/16
+export NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.0.0/24
 curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 unset HTTP_PROXY HTTPS_PROXY
 cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
 deb https://packages.cloud.google.com/apt/ kubernetes-xenial main
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
+
+enable_apt_proxy
 apt-get update && apt-get install -y kubelet kubeadm kubectl docker.io
 echo '锁定 kubelet kubeadm kubectl 的版本'
 apt-mark hold kubelet kubeadm kubectl
+# disable_apt_proxy
 
 echo '设置 Docker 的代理'
 systemctl enable docker
@@ -64,6 +74,7 @@ EOF
 
 fi
 
+echo '修改 docker 的配置'
 if [[ ! -f "/etc/docker/daemon.json" ]]; then
 
 cat > /etc/docker/daemon.json <<EOF
@@ -98,7 +109,7 @@ kubeadm config images pull
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
-#     sudo kubeadm init --apiserver-advertise-address 172.18.0.101  --pod-network-cidr=172.16.0.0/16 --service-cidr 172.15.0.0/16
+#     sudo kubeadm init --apiserver-advertise-address 172.16.10.101  --pod-network-cidr=10.16.0.0/16 --service-cidr 10.17.0.0/16
 # fi
 
 # echo '安装网络插件'
