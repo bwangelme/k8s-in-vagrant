@@ -29,9 +29,9 @@ if [[ $? == 1 ]]; then
 echo '设置主机名的解析'
 cat >> /etc/hosts <<EOF
 # hostname config for k8s
-172.18.0.101 k8s-node1
-172.18.0.102 k8s-node2
-172.18.0.103 k8s-node3
+192.168.57.101 k8s-node1
+192.168.57.102 k8s-node2
+192.168.57.103 k8s-node3
 EOF
 
 fi
@@ -109,7 +109,7 @@ kubeadm config images pull
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
-#     sudo kubeadm init --apiserver-advertise-address 172.16.10.101  --pod-network-cidr=10.16.0.0/16 --service-cidr 10.17.0.0/16
+#     sudo kubeadm init --apiserver-advertise-address 192.168.57.101
 # fi
 
 # echo '安装网络插件'

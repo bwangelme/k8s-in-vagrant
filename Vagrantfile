@@ -20,13 +20,8 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-node#{i}" do |node|
       node.vm.box = "ubuntu/focal64"
       node.vm.hostname = "k8s-node#{i}"
-      netmask = "255.255.248.0"
-      ip1 = "192.168.56.#{i+100}"
-      ip2 = "192.168.57.#{i+100}"
-      ip3 = "192.168.58.#{i+100}"
-      node.vm.network "private_network", ip: ip1, netmask: netmask
-      node.vm.network "private_network", ip: ip2, netmask: netmask
-      node.vm.network "private_network", ip: ip3, netmask: netmask
+      ip = "192.168.57.#{i+100}"
+      node.vm.network "private_network", ip: ip
       node.vm.provider "virtualbox" do |vb|
         vb.memory = "4096"
         vb.cpus = 2
