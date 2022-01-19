@@ -109,10 +109,9 @@ kubeadm config images pull
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
-#     sudo kubeadm init --apiserver-advertise-address 192.168.57.101
+#     sudo kubeadm init --apiserver-advertise-address 192.168.57.101 --pod-network-cidr=10.244.0.0/16
 # fi
 
-sudo kubeadm init --apiserver-advertise-address 192.168.57.101 --pod-network-cidr=10.244.0.0/16
 
 # echo '安装网络插件'
 # url="https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
