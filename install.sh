@@ -29,9 +29,9 @@ if [[ $? == 1 ]]; then
 echo '设置主机名的解析'
 cat >> /etc/hosts <<EOF
 # hostname config for k8s
-192.168.57.101 k8s-node1
-192.168.57.102 k8s-node2
-192.168.57.103 k8s-node3
+192.168.57.11 k8s-node1
+192.168.57.12 k8s-node2
+192.168.57.13 k8s-node3
 EOF
 
 fi
@@ -69,7 +69,7 @@ cat > /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
 Environment="HTTP_PROXY=10.8.0.1:8118"
 Environment="HTTPS_PROXY=10.8.0.1:8118"
-Environment="NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.0.0/16"
+Environment="NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.56.0/21"
 EOF
 
 fi
@@ -104,15 +104,15 @@ systemctl restart docker.service
 echo '关闭 Swap'
 swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
 
-echo '拉取 k8s 启动所需镜像'
-kubeadm config images pull
+# echo '拉取 k8s 启动所需镜像'
+# kubeadm config images pull
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
 #     sudo kubeadm init --apiserver-advertise-address 192.168.57.101 --pod-network-cidr=10.244.0.0/16
 # fi
 
-
+# TODO: use calico
 # echo '安装网络插件'
 # url="https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 # k apply -f conf/weave.yaml

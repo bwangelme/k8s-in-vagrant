@@ -20,8 +20,9 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-node#{i}" do |node|
       node.vm.box = "ubuntu/focal64"
       node.vm.hostname = "k8s-node#{i}"
-      node.vm.synced_folder "/Users/michaeltsui/Github/Golang/", "/code"
-      ip = "192.168.57.#{i+100}"
+      node.vm.synced_folder "/home/xuyundong/Github", "/code"
+      # Ranges: 192.168.56.0/21
+      ip = "192.168.56.#{i+10}"
       node.vm.network "private_network", ip: ip
       node.vm.provider "virtualbox" do |vb|
         vb.memory = "4096"
