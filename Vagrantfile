@@ -29,7 +29,8 @@ Vagrant.configure("2") do |config|
         vb.cpus = 2
         vb.name = "k8s-node#{i}"
       end
-      node.vm.provision "shell", path: "install.sh", args: [i]
+      # node.vm.provision "shell", path: "install.sh", args: [i]
+      node.vm.provision "shell", path: "dev.sh", args: [i]
     end
   end
 end
