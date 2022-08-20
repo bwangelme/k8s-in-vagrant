@@ -19,18 +19,31 @@ EOF
     sysctl --system
 }
 
+function mkdir_if_not_exist() {
+    local _dir=$1
+    if [[ ! -d $_dir ]]; then
+        mkdir -p $_dir
+        echo "创建目录　$_dir"
+    fi
+}
+
 
 function install_containerd() {
     echo '卸载 apt containerd'
     apt-get remove -y containerd docker.io
-    unlink /etc/systemd/system/containerd.service
+    rm -vf /etc/systemd/system/containerd.service
+    rm -rvf /etc/systemd/system/containerd.service.d
 
     echo '安装　containerd'
     cd /code/k8s/k8s-in-vagrant/package
     tar Cxzvf /usr/local containerd-1.6.8-linux-amd64.tar.gz
-    cp containerd.service /etc/systemd/system/
+
+    echo '设置　containerd service 文件'
+    cp -v containerd.service /etc/systemd/system/
+
     systemctl daemon-reload
     systemctl enable --now containerd
+    systemctl restart containerd
 }
 
 function install_runc() {
@@ -44,4 +57,15 @@ function install_runc() {
     tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
 }
 
-install_runc
+function setup_containerd_config() {
+    echo '配置 containerd 的配置文件'
+
+    mkdir_if_not_exist /etc/containerd
+    cd /code/k8s/k8s-in-vagrant/package
+    cp config.toml /etc/containerd/config.toml
+    systemctl restart containerd
+}
+
+install_containerd
+
+# TODO: containerd 设置　http 代理
