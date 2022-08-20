@@ -29,24 +29,31 @@ if [[ $? == 1 ]]; then
 echo '设置主机名的解析'
 cat >> /etc/hosts <<EOF
 # hostname config for k8s
-192.168.57.11 k8s-node1
-192.168.57.12 k8s-node2
-192.168.57.13 k8s-node3
+192.168.56.11 k8s-node1
+192.168.56.12 k8s-node2
+192.168.56.13 k8s-node3
 EOF
 
 fi
 
 echo '安装Docker and k8s'
 export DEBIAN_FRONTEND=noninteractive
+
 echo '  安装必要的一些系统工具'
-apt-get update && apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
+apt-get update && apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2 gnupg lsb-release
+
 echo '  安装GPG证书'
-curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-echo '  写入 aliyun 软件源信息'
-add-apt-repository "deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
-echo '  安装 Kubernetes'
 export HTTP_PROXY='10.8.0.1:8118' HTTPS_PROXY='10.8.0.1:8118'
 export NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.0.0/24
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo '  写入 docker 软件源信息'
+ echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+echo '  安装 Kubernetes'
 curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 unset HTTP_PROXY HTTPS_PROXY
 cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
@@ -55,51 +62,10 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
 enable_apt_proxy
-apt-get update && apt-get install -y kubelet kubeadm kubectl docker.io
+apt-get update && apt-get install -y kubelet kubeadm kubectl containerd.io
 echo '锁定 kubelet kubeadm kubectl 的版本'
 apt-mark hold kubelet kubeadm kubectl
-# disable_apt_proxy
-
-echo '设置 Docker 的代理'
-systemctl enable docker
-[[ ! -d "/etc/systemd/system/docker.service.d" ]] && mkdir -p /etc/systemd/system/docker.service.d
-if [[ ! -f "/etc/systemd/system/docker.service.d/http-proxy.conf" ]]; then
-
-cat > /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
-[Service]
-Environment="HTTP_PROXY=10.8.0.1:8118"
-Environment="HTTPS_PROXY=10.8.0.1:8118"
-Environment="NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.56.0/21"
-EOF
-
-fi
-
-echo '修改 docker 的配置'
-if [[ ! -f "/etc/docker/daemon.json" ]]; then
-
-cat > /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
-
-fi
-
-echo '创建 Docker 用户组'
-egrep "^docker" /etc/group >& /dev/null
-if [ $? -ne 0 ]
-then
-  groupadd docker
-fi
-usermod -aG docker vagrant
-echo '重启Docker'
-systemctl daemon-reload
-systemctl restart docker.service
+disable_apt_proxy
 
 echo '关闭 Swap'
 swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
