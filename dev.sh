@@ -79,5 +79,3 @@ function pull_k8s_image() {
     echo '拉取　k8s 所需的镜像'
     kubeadm config images pull
 }
-
-setup_containerd_config

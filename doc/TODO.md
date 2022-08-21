@@ -20,3 +20,5 @@ https://cloud.tencent.com/developer/article/1922693
 
 - [ctr 需要在客户端设置代理](https://github.com/containerd/cri/issues/1169#issuecomment-501376676)
 - [containerd cli 说明](https://github.com/containerd/containerd/blob/main/docs/getting-started.md#interacting-with-containerd-via-cli)
+
+sudo kubeadm join 192.168.56.11:6443 --token ahdh13.1ro20iu7y3culx3m --discovery-token-ca-cert-hash sha256:56c47e209781cc9ca395502497f20a9b53a6cf965caf6af318b51a492c60d608
