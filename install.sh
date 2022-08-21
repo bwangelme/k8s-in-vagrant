@@ -163,6 +163,11 @@ function pull_k8s_image() {
 # 安装 calico
 # https://projectcalico.docs.tigera.io/getting-started/kubernetes/quickstart
 # https://www.golinuxcloud.com/calico-kubernetes/
+# k apply -f k8s-cni/calico.yaml
+# $ kubectl creaet -f k8s-cni/nginx-pod.yaml
+# $ kubectl get pods -o wide
+# NAME    READY   STATUS    RESTARTS   AGE   IP               NODE        NOMINATED NODE   READINESS GATES
+# nginx   1/1     Running   0          67s   10.244.169.129   k8s-node2   <none>           <none>
 
 # echo '安装 dashboard'
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
