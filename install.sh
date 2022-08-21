@@ -169,7 +169,12 @@ function pull_k8s_image() {
 # NAME    READY   STATUS    RESTARTS   AGE   IP               NODE        NOMINATED NODE   READINESS GATES
 # nginx   1/1     Running   0          67s   10.244.169.129   k8s-node2   <none>           <none>
 
+# 去掉　master 节点的　taint
+# 让 pod 能够调度到控制平面上
+# kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
+
 # echo '安装 dashboard'
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 # echo '创建用户'
 # https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md#creating-sample-user
+
