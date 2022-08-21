@@ -160,10 +160,9 @@ function pull_k8s_image() {
 #     sudo kubeadm init --apiserver-advertise-address 192.168.56.11 --pod-network-cidr=10.244.0.0/16
 # fi
 
-# TODO: use calico
-# echo '安装网络插件'
-# url="https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
-# k apply -f conf/weave.yaml
+# 安装 calico
+# https://projectcalico.docs.tigera.io/getting-started/kubernetes/quickstart
+# https://www.golinuxcloud.com/calico-kubernetes/
 
 # echo '安装 dashboard'
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
