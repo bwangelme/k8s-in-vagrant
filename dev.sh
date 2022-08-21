@@ -43,7 +43,7 @@ function install_containerd() {
     rm -rvf /etc/systemd/system/containerd.service.d
 
     echo '安装　containerd'
-    cd /code/k8s/k8s-in-vagrant/package
+    cd /code/k8s/k8s-in-vagrant/containerd
     tar Cxzvf /usr/local containerd-1.6.8-linux-amd64.tar.gz
 
     echo '设置　containerd service 文件'
@@ -55,7 +55,7 @@ function install_containerd() {
 }
 
 function install_runc() {
-    cd /code/k8s/k8s-in-vagrant/package
+    cd /code/k8s/k8s-in-vagrant/containerd
 
     echo '安装　runc'
     install -m 755 runc.amd64 /usr/local/sbin/runc
@@ -69,7 +69,7 @@ function setup_containerd_config() {
     echo '配置 containerd 的配置文件'
 
     mkdir_if_not_exist /etc/containerd
-    cd /code/k8s/k8s-in-vagrant/package
+    cd /code/k8s/k8s-in-vagrant/containerd
     cp config.toml /etc/containerd/config.toml
     cp crictl.yaml /etc/crictl.yaml
     systemctl restart containerd
