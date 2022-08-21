@@ -9,3 +9,14 @@ https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/crea
 
 可能存在其他的墙的策略，还是使用　azure 的代理镜像
 
+
+containerd 拉取镜像是在客户端拉取的，所以代理的环境变量需要设置到客户端
+
+## toread
+
+https://cloud.tencent.com/developer/article/1922693
+
+## containerd 设置代理
+
+- [ctr 需要在客户端设置代理](https://github.com/containerd/cri/issues/1169#issuecomment-501376676)
+- [containerd cli 说明](https://github.com/containerd/containerd/blob/main/docs/getting-started.md#interacting-with-containerd-via-cli)

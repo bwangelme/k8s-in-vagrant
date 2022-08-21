@@ -10,7 +10,15 @@ function disable_selinux() {
 # 但这似乎和我们增加的配置无关，暂时忽略它
 function trans_iptables() {
     echo '将桥接的IPv4流量传递到iptables的链'
+
+cat <<EOF | tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+    modprobe overlay
     modprobe br_netfilter
+
 cat > /etc/sysctl.d/k8s.conf << EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
@@ -63,9 +71,13 @@ function setup_containerd_config() {
     mkdir_if_not_exist /etc/containerd
     cd /code/k8s/k8s-in-vagrant/package
     cp config.toml /etc/containerd/config.toml
+    cp crictl.yaml /etc/crictl.yaml
     systemctl restart containerd
 }
 
-install_containerd
+function pull_k8s_image() {
+    echo '拉取　k8s 所需的镜像'
+    kubeadm config images pull
+}
 
-# TODO: containerd 设置　http 代理
+setup_containerd_config
