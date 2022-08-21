@@ -42,18 +42,10 @@ export DEBIAN_FRONTEND=noninteractive
 echo '  安装必要的一些系统工具'
 apt-get update && apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2 gnupg lsb-release
 
-echo '  安装GPG证书'
+echo '  安装 Kubernetes'
 export HTTP_PROXY='10.8.0.1:8118' HTTPS_PROXY='10.8.0.1:8118'
 export NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8,172.17.0.0/16,192.168.0.0/24
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-echo '  写入 docker 软件源信息'
- echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-echo '  安装 Kubernetes'
 curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 unset HTTP_PROXY HTTPS_PROXY
 cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
@@ -75,7 +67,7 @@ swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
-#     sudo kubeadm init --apiserver-advertise-address 192.168.57.101 --pod-network-cidr=10.244.0.0/16
+#     sudo kubeadm init --apiserver-advertise-address 192.168.56.11 --pod-network-cidr=10.244.0.0/16
 # fi
 
 # TODO: use calico
