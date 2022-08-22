@@ -489,6 +489,8 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+        # ingress 仅在特定的节点上运行
+        # kubernetes.io/hostname: k8s-node2
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:

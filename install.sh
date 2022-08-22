@@ -173,6 +173,9 @@ function pull_k8s_image() {
 # 让 pod 能够调度到控制平面上
 # kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
 
+# 安装 ingress
+# k apply -f ingress-nginx/deploy.yaml
+
 # echo '安装 dashboard'
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 # echo '创建用户'
