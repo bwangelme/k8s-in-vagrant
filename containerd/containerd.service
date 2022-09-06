@@ -6,14 +6,14 @@ After=network.target local-fs.target
 [Service]
 #uncomment to enable the experimental sbservice (sandboxed) version of containerd/cri integration
 #Environment="ENABLE_CRI_SANDBOXES=sandboxed"
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/containerd
 
 # 设置拉取镜像的代理
 Environment=HTTP_PROXY=10.8.0.1:8118
 Environment=HTTPS_PROXY=10.8.0.1:8118
 Environment=NO_PROXY=localhost,127.0.0.1,172.17.0.0/16,192.168.56.0/24,10.96.0.0/16
 
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/containerd
 Type=notify
 Delegate=yes
 KillMode=process

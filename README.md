@@ -2,7 +2,7 @@
 
 ## 下载依赖
 
-参考　[package](./package/) 下载　containerd 运行时
+参考　[containerd](./containerd/) 下载　containerd 运行时
 
 
 ## 相关文档

@@ -35,7 +35,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 function setup_apt() {
     echo "修改 apt 源"
-    sed -i 's/http:\/\/archive.ubuntu.com/https:\/\/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+    sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
 }
 
@@ -70,7 +70,7 @@ deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
     enable_apt_proxy
-    apt-get update && apt-get install -y kubelet kubeadm kubectl containerd.io
+    apt-get update && apt-get install -y kubelet kubeadm kubectl
     echo '锁定 kubelet kubeadm kubectl 的版本'
     apt-mark hold kubelet kubeadm kubectl
     disable_apt_proxy
@@ -153,6 +153,19 @@ function setup_containerd_config() {
 function pull_k8s_image() {
     echo '拉取　k8s 所需的镜像'
     kubeadm config images pull
+}
+
+function main() {
+    setup_apt
+    setup_k8s_dns
+    apt_install_essential
+    install_k8s
+    disable_swap
+    trans_iptables
+    install_containerd
+    install_runc
+    setup_containerd_config
+    pull_k8s_image
 }
 
 # echo '启动k8s'
