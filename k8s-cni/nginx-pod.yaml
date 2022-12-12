@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  namespace: default
+  namespace: qae
 spec:
   containers:
   - name: nginx
