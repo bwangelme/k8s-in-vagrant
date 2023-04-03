@@ -155,18 +155,32 @@ function pull_k8s_image() {
     kubeadm config images pull
 }
 
-function main() {
-    setup_apt
-    setup_k8s_dns
-    apt_install_essential
-    install_k8s
-    disable_swap
-    trans_iptables
-    install_containerd
-    install_runc
-    setup_containerd_config
-    pull_k8s_image
+function install_nfs() {
+    if [[ $1 == 3 ]]; then
+        echo "在 k8s-node3 节点上安装 nfs"
+        apt-get install -y nfs-kernel-server
+        mkdir /nfs_share && chmod 777 /nfs_share
+        echo '/nfs_share *(rw,sync,no_root_squash,no_subtree_check)' >> /etc/exports
+        systemctl restart nfs-kernel-server.service
+    fi
 }
+
+function main() {
+    echo "runint script in $1"
+    # setup_apt
+    # setup_k8s_dns
+    # apt_install_essential
+    # install_k8s
+    # disable_swap
+    # trans_iptables
+    # install_containerd
+    # install_runc
+    # setup_containerd_config
+    # pull_k8s_image
+    install_nfs "$1"
+}
+
+main "$1"
 
 # echo '启动k8s'
 # if [[ $1 == 1 ]];then
