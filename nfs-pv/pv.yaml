@@ -14,5 +14,5 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    path: /nfs_share
+    path: /ssd/direct
     server: 192.168.56.13
