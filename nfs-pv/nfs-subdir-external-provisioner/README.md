@@ -1,3 +1,7 @@
+## Repo
+
+https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+
 ## 通过 helm 安装 nfs-provisioner
 
 ```shell
