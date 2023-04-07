@@ -5,14 +5,16 @@ https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
 ## 通过 helm 安装 nfs-provisioner
 
 ```shell
-切换到 nfs-storage namespace
-helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=192.168.56.13 --set nfs.path=/ssd/provisioner
+helm -n nfs-storage install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    --set nfs.server=192.168.56.13 \
+    --set nfs.path=/ssd/provisioner \
+    --set storageClass.provisionerName=k8s-sigs.io/nfs-subdir-external-provisioner
 ```
 
 ```shell
-ø> helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=192.168.56.13 --set nfs.path=/ssd/provisioner
+ø> helm -n nfs-storage install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=192.168.56.13 --set nfs.path=/ssd/provisioner --set storageClass.provisionerName=k8s-sigs.io/nfs-subdir-external-provisioner
 NAME: nfs-subdir-external-provisioner
-LAST DEPLOYED: Fri Apr  7 16:39:10 2023
+LAST DEPLOYED: Fri Apr  7 19:08:45 2023
 NAMESPACE: nfs-storage
 STATUS: deployed
 REVISION: 1
