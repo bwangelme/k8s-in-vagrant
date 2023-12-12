@@ -54,7 +54,7 @@ EOF
 
 function apt_install_essential() {
     echo '安装必要的一些系统工具'
-    apt-get update && apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2 gnupg lsb-release
+    apt-get update && apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2 gnupg lsb-release ripgrep
 }
 
 function install_k8s() {
@@ -177,7 +177,7 @@ function main() {
     # install_runc
     # setup_containerd_config
     # pull_k8s_image
-    install_nfs "$1"
+    # install_nfs "$1"
 }
 
 main "$1"
@@ -190,8 +190,8 @@ main "$1"
 # 安装 calico
 # https://projectcalico.docs.tigera.io/getting-started/kubernetes/quickstart
 # https://www.golinuxcloud.com/calico-kubernetes/
-# k apply -f k8s-cni/calico.yaml
-# $ kubectl creaet -f k8s-cni/nginx-pod.yaml
+# $ kubectl apply -f k8s-cni/calico.yaml
+# $ kubectl create -f k8s-cni/nginx-pod.yaml
 # $ kubectl get pods -o wide
 # NAME    READY   STATUS    RESTARTS   AGE   IP               NODE        NOMINATED NODE   READINESS GATES
 # nginx   1/1     Running   0          67s   10.244.169.129   k8s-node2   <none>           <none>
